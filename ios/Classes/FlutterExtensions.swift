@@ -198,17 +198,17 @@ extension DComponents {
 
 extension DateComponents: DComponents {
     var year: Int {
-        get { self.value(for: .year)! }
+        get { self.value(for: .year) ?? 0 }
         set(value) { self.setValue(value, for: .year) }
     }
     
     var month: Int {
-        get { self.value(for: .month)! }
+        get { self.value(for: .month) ?? 0 }
         set(value) { self.setValue(value, for: .month) }
     }
     
     var day: Int {
-        get { self.value(for: .day)! }
+        get { self.value(for: .day) ?? 0 }
         set(value) { self.setValue(value, for: .day) }
     }
 }
