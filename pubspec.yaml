@@ -9,15 +9,18 @@ environment:
   flutter: '>=1.10.0'
 dependencies:
   collection: ^1.15.0
-  dartxx: ^0.5.3+2
-  equatable: ^2.0.3
-  flexidate:
+  # Referencing specific checkin of dartxx required to upgrade other packages (creator didn't publish this update).
+  dartxx: 
     git:
-      url: https://github.com/agendaboa/flexidate-0.8.0-3
-      ref: 7931be0c4ee95d5349dccc2f135874e67c9e3530
+      url: https://github.com/ericmartineau/dartxx
+      ref: dbd3c9bc1b01253b6da28c029a28e439e4363bef
+  equatable: ^2.0.3
+  # Created my own flexidate so I can upgrade packages required to upgrade other packages.
+  flexidate:
+    path: /Users/keithblack/GitHub/flexidate-0.8.0-3
   flutter:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.0
   logging: ^1.0.2
   logging_config: ^0.6.7+7
   quiver: ^3.0.1+1
