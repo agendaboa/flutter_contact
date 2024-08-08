@@ -35,11 +35,13 @@ abstract class BaseFlutterContactForms(private val plugin: BaseFlutterContactPlu
                     result?.success(mapOf("success" to false, "code" to ErrorCodes.FORM_OPERATION_CANCELED))
                     false
                 }
+
                 else -> when (val contactIdString = uri.lastPathSegment) {
                     null -> {
                         result?.success(mapOf("success" to false, "code" to ErrorCodes.FORM_OPERATION_CANCELED))
                         false
                     }
+
                     else -> {
                         try {
                             result?.success(mapOf(
@@ -53,16 +55,19 @@ abstract class BaseFlutterContactForms(private val plugin: BaseFlutterContactPlu
                     }
                 }
             }
+
             REQUEST_OPEN_CONTACT_PICKER -> when (val uri = intent?.data) {
                 null -> {
                     result?.success(mapOf("success" to false, "code" to ErrorCodes.PICKER_OPERATION_CANCELED))
                     false
                 }
+
                 else -> when (val contactIdString = uri.lastPathSegment) {
                     null -> {
                         result?.success(mapOf("success" to false, "code" to ErrorCodes.PICKER_OPERATION_CANCELED))
                         false
                     }
+
                     else -> {
                         try {
                             result?.success(mapOf(
@@ -76,6 +81,7 @@ abstract class BaseFlutterContactForms(private val plugin: BaseFlutterContactPlu
                     }
                 }
             }
+
             else -> {
                 result?.success(ErrorCodes.FORM_COULD_NOT_BE_OPENED)
                 false
@@ -165,15 +171,6 @@ fun Contact.applyToIntent(mode: ContactMode, intent: Intent) {
             .withValue(ContactsContract.CommonDataKinds.StructuredName.PREFIX, contact.prefix)
             .withValue(ContactsContract.CommonDataKinds.StructuredName.SUFFIX, contact.suffix)
 
-
-    inboundData += contentValues(ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE)
-            .withValue(ContactsContract.CommonDataKinds.Note.NOTE, contact.note)
-
-
-    inboundData += contentValues(ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
-            .withValue(ContactsContract.CommonDataKinds.Organization.COMPANY, contact.company)
-            .withValue(ContactsContract.CommonDataKinds.Organization.TITLE, contact.jobTitle)
-
     //Phones
     for (phone in contact.phones) {
         inboundData += contentValues(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
@@ -188,33 +185,6 @@ fun Contact.applyToIntent(mode: ContactMode, intent: Intent) {
                 .withTypeAndLabel(ItemType.email, email.label)
     }
 
-    //Postal addresses
-    for (address in contact.postalAddresses) {
-        inboundData += contentValues(ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE)
-                .withTypeAndLabel(ItemType.address, address.label)
-                .withValue(ContactsContract.CommonDataKinds.StructuredPostal.STREET, address.street)
-                .withValue(ContactsContract.CommonDataKinds.StructuredPostal.CITY, address.city)
-                .withValue(ContactsContract.CommonDataKinds.StructuredPostal.REGION, address.region)
-                .withValue(ContactsContract.CommonDataKinds.StructuredPostal.POSTCODE, address.postcode)
-                .withValue(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY, address.country)
-    }
-
-
-    for (date in contact.dates) {
-        inboundData += contentValues(ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE)
-                .withTypeAndLabel(ItemType.event, date.label)
-                .withValue(ContactsContract.CommonDataKinds.Event.START_DATE, date.toDateValue())
-
-    }
-
-    for (url in contact.urls) {
-        inboundData += contentValues(ContactsContract.CommonDataKinds.Website.CONTENT_ITEM_TYPE)
-                .withTypeAndLabel(ItemType.url, url.label)
-                .withValue(ContactsContract.CommonDataKinds.Website.URL, url.value)
-    }
-
-
-
     intent.apply {
         putExtra(ContactsContract.Intents.Insert.EMAIL, emails.firstOrNull()?.value)
         putExtra(ContactsContract.Intents.Insert.PHONE, phones.firstOrNull()?.value)
@@ -224,8 +194,6 @@ fun Contact.applyToIntent(mode: ContactMode, intent: Intent) {
                 else -> listOfNotNull(contact.displayName)
             }
         }.joinToString(" "))
-        putExtra(ContactsContract.Intents.Insert.COMPANY, company)
-        putExtra(ContactsContract.Intents.Insert.NOTES, note)
         putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, inboundData)
     }
 
