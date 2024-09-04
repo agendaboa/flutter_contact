@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contact/paging_iterable.dart';
 import 'package:logging/logging.dart';
-import 'package:logging_config/logging_config.dart';
+// import 'package:logging_config/logging_config.dart';
 
 import 'contact.dart';
 import 'contact_events.dart';
@@ -53,7 +53,7 @@ abstract class ContactsContract implements FormsContract {
     ContactSortOrder? sortBy,
   });
 
-  void configureLogs({Level? level, LoggingHandler? onLog});
+  // void configureLogs({Level? level, LoggingHandler? onLog});
 
   Future<Contact?> getContact(String identifier,
       {bool withThumbnails = true,
@@ -255,13 +255,13 @@ class ContactService implements ContactsContract {
     return list;
   }
 
-  /// Configures logging.  FlutterPhoneState uses the [logging] plugin.
-  @override
-  void configureLogs({Level? level, LoggingHandler? onLog}) {
-    configureLogging(LogConfig(
-        logLevels: {"contactsService": level!},
-        handler: onLog ?? LoggingHandler.dev()));
-  }
+  // /// Configures logging.  FlutterPhoneState uses the [logging] plugin.
+  // @override
+  // void configureLogs({Level? level, LoggingHandler? onLog}) {
+  //   configureLogging(LogConfig(
+  //       logLevels: {"contactsService": level!},
+  //       handler: onLog ?? LoggingHandler.dev()));
+  // }
 
   /// Retrieves a single contact by identifier
   @override
