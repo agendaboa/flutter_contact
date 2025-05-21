@@ -22,7 +22,7 @@ open class FlutterContactPlugin : FlutterPlugin, ActivityAware {
 
     // --- FlutterPlugin implementation ---
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        initInstances(binding.applicationContext, binding.binaryMessenger, null)
+        initInstances(binding.applicationContext, binding.binaryMessenger)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
