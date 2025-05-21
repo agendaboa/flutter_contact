@@ -101,18 +101,13 @@ class FlutterAggregateContactPlugin : BaseFlutterContactPlugin(), MethodCallHand
         }
     }
 
-    override fun initInstance(applicationContext: Context, messenger: BinaryMessenger, registrar: PluginRegistry.Registrar?) {
+    override fun initInstance(applicationContext: Context, messenger: BinaryMessenger) {
         methodChannel = MethodChannel(messenger, flutterContactsChannelName)
         eventChannel = EventChannel(messenger, flutterContactsEventName)
         methodChannel!!.setMethodCallHandler(this)
         eventChannel!!.setStreamHandler(this)
         context = applicationContext
-        contactForms = if (registrar == null) {
-            // initializing the instance with v2 embedding
-            FlutterContactForms(this, context)
-        } else {
-            // initializing the instance with v1 embedding
-            FlutterContactFormsOld(this, registrar)
-        }
+        // initializing the instance with v2 embedding
+        contactForms = FlutterContactForms(this, context)
     }
 }

@@ -33,7 +33,7 @@ abstract class BaseFlutterContactPlugin : ContactExtensions, EventChannel.Stream
     override val resolver: ContentResolver
         get() = context.contentResolver
 
-    abstract fun initInstance(applicationContext: Context, messenger: BinaryMessenger, registrar: PluginRegistry.Registrar?)
+    abstract fun initInstance(applicationContext: Context, messenger: BinaryMessenger)
 
     fun unInitInstance() {
         methodChannel?.setMethodCallHandler(null)

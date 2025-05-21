@@ -7,8 +7,6 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.PluginRegistry.Registrar
-
 
 /**
  * class for the flutter_contact plugin.  There are two modes for this plugin: aggregate and raw.
@@ -21,14 +19,6 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 open class FlutterContactPlugin : FlutterPlugin, ActivityAware {
     private var rawPlugin: FlutterRawContactPlugin? = null
     private var unifiedPlugin: FlutterAggregateContactPlugin? = null
-
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val instance = FlutterContactPlugin()
-            instance.initInstances(registrar.context(), registrar.messenger(), registrar)
-        }
-    }
 
     // --- FlutterPlugin implementation ---
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -60,12 +50,12 @@ open class FlutterContactPlugin : FlutterPlugin, ActivityAware {
         bindToActivity(binding, unifiedPlugin?.contactForms)
     }
 
-    private fun initInstances(applicationContext: Context, binaryMessenger: BinaryMessenger, registrar: Registrar?) {
+    private fun initInstances(applicationContext: Context, binaryMessenger: BinaryMessenger) {
         rawPlugin = FlutterRawContactPlugin()
-        rawPlugin!!.initInstance(applicationContext, binaryMessenger, registrar)
+        rawPlugin!!.initInstance(applicationContext, binaryMessenger)
 
         unifiedPlugin = FlutterAggregateContactPlugin()
-        unifiedPlugin!!.initInstance(applicationContext, binaryMessenger, registrar)
+        unifiedPlugin!!.initInstance(applicationContext, binaryMessenger)
     }
 
     private fun unInitInstances() {
