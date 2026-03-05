@@ -5,6 +5,7 @@ package co.sunnyapp.flutter_contact
 import android.annotation.TargetApi
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.os.Build
 import android.os.Handler
@@ -97,8 +98,7 @@ abstract class BaseFlutterContactPlugin : ContactExtensions, EventChannel.Stream
         val ops = arrayListOf<ContentProviderOperation>()
 
         ops += ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .withValues(ContentValues())
                 .build()
 
 
