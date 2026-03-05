@@ -181,10 +181,29 @@ abstract class BaseFlutterContactPlugin : ContactExtensions, EventChannel.Stream
 
 
         val saveResult = resolver.applyBatch(ContactsContract.AUTHORITY, ops)
-        val contactId = saveResult.first().uri?.lastPathSegment?.toLong()
+        val rawContactId = saveResult.first().uri?.lastPathSegment?.toLong()
                 ?: pluginError("invalidId", "Expected a valid id")
 
-        return getContact(ContactKeys(contactId), withThumbnails = true, photoHighResolution = true)
+        // In UNIFIED mode, getContact looks up by aggregate contact ID (Contacts._ID), not raw
+        // contact ID. The insert returns the raw contact ID; resolve it to the aggregate ID so
+        // the lookup succeeds (especially after last-delete + add or when contacts are synced).
+        val contactIdForLookup = when (mode) {
+            ContactMode.UNIFIED -> resolver.query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                arrayOf(ContactsContract.RawContacts.CONTACT_ID),
+                "${ContactsContract.RawContacts._ID}=?",
+                arrayOf(rawContactId.toString()),
+                null
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val idx = cursor.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID)
+                    if (idx >= 0) cursor.getLong(idx) else rawContactId
+                } else rawContactId
+            } ?: rawContactId
+            ContactMode.SINGLE -> rawContactId
+        }
+
+        return getContact(ContactKeys(mode, contactIdForLookup), withThumbnails = true, photoHighResolution = true)
     }
 
     protected fun deleteContact(contact: Contact): Boolean {
