@@ -97,6 +97,7 @@ abstract class BaseFlutterContactPlugin : ContactExtensions, EventChannel.Stream
     protected fun addContact(contact: Contact): Struct {
         val ops = arrayListOf<ContentProviderOperation>()
 
+        // "Using default value to save the contact. [getDefaultAccountForNewContacts()](https://developer.android.com/reference/android/provider/ContactsContract.RawContacts.DefaultAccount#getDefaultAccountForNewContacts(android.content.ContentResolver) requires API 36".
         ops += ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                 .withValues(ContentValues())
                 .build()
