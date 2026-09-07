@@ -1,4 +1,4 @@
-library flutter_contact;
+library;
 
 export 'base_contacts.dart';
 export 'contact.dart';

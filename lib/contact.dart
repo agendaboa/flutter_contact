@@ -14,7 +14,7 @@ final flutterContactLog = Logger('flutterContact');
 
 enum ContactMode { single, unified }
 
-ContactMode? contactModeOf(dyn) {
+ContactMode? contactModeOf(dynamic dyn) {
   if (dyn == null) return null;
   switch (dyn.toString()) {
     case 'single':
@@ -77,9 +77,6 @@ class ContactKeys extends Equatable {
           unifiedContactId: identifier ?? unifiedContactId,
           otherKeys: otherKeys,
         );
-
-      default:
-        return (throw "This can't happen");
     }
   }
 
@@ -128,10 +125,10 @@ class ContactKeys extends Equatable {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'identifier': this.identifier,
-      'singleContactId': this.singleContactId,
-      'unifiedContactId': this.unifiedContactId,
-      'otherKeys': this.otherKeys,
+      'identifier': identifier,
+      'singleContactId': singleContactId,
+      'unifiedContactId': unifiedContactId,
+      'otherKeys': otherKeys,
     } as Map<String, dynamic>;
   }
 
@@ -212,9 +209,9 @@ class Contact {
     if (avatar != null) return avatar;
 
     if (keys?.unifiedContactId == keys?.singleContactId) {
-      return UnifiedContacts.getContactImage(this.identifier);
+      return UnifiedContacts.getContactImage(identifier);
     } else {
-      return SingleContacts.getContactImage(this.identifier);
+      return SingleContacts.getContactImage(identifier);
     }
   }
 
@@ -270,12 +267,12 @@ class Contact {
   bool get hasAvatar => avatar?.isNotEmpty == true;
 
   String initials() {
-    return ((this.givenName?.isNotEmpty == true ? this.givenName![0] : "") +
-            (this.familyName?.isNotEmpty == true ? this.familyName![0] : ""))
+    return ((givenName?.isNotEmpty == true ? givenName![0] : "") +
+            (familyName?.isNotEmpty == true ? familyName![0] : ""))
         .toUpperCase();
   }
 
-  static Contact? of(final dyn, ContactMode mode) {
+  static Contact? of(final dynamic dyn, ContactMode mode) {
     if (dyn == null) {
       return null;
     } else if (dyn is Contact) {
@@ -285,7 +282,7 @@ class Contact {
     }
   }
 
-  factory Contact.fromMap(final dyn, ContactMode? mode) {
+  factory Contact.fromMap(final dynamic dyn, ContactMode? mode) {
     mode ??= contactModeOf(dyn["mode"])!;
     return Contact(
       identifier: dyn[_kidentifier] as String?,
@@ -323,35 +320,32 @@ class Contact {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    final _ = _contactToMap(this);
-    return _;
-  }
+  Map<String, dynamic> toMap() => _contactToMap(this);
 
   /// The [+] operator fills in this contact's empty fields with the fields from [other]
   Contact operator +(Contact other) => Contact(
-      keys: this.keys ?? other.keys,
-      identifier: this.identifier ?? other.identifier,
-      displayName: this.displayName ?? other.displayName,
-      givenName: this.givenName ?? other.givenName,
-      middleName: this.middleName ?? other.middleName,
-      prefix: this.prefix ?? other.prefix,
-      lastModified: this.lastModified ?? other.lastModified,
-      suffix: this.suffix ?? other.suffix,
-      familyName: this.familyName ?? other.familyName,
-      company: this.company ?? other.company,
-      jobTitle: this.jobTitle ?? other.jobTitle,
-      linkedContactIds: this.linkedContactIds + other.linkedContactIds,
-      note: this.note ?? other.note,
-      emails: {...this.emails, ...other.emails}.toList(),
+      keys: keys ?? other.keys,
+      identifier: identifier ?? other.identifier,
+      displayName: displayName ?? other.displayName,
+      givenName: givenName ?? other.givenName,
+      middleName: middleName ?? other.middleName,
+      prefix: prefix ?? other.prefix,
+      lastModified: lastModified ?? other.lastModified,
+      suffix: suffix ?? other.suffix,
+      familyName: familyName ?? other.familyName,
+      company: company ?? other.company,
+      jobTitle: jobTitle ?? other.jobTitle,
+      linkedContactIds: linkedContactIds + other.linkedContactIds,
+      note: note ?? other.note,
+      emails: {...emails, ...other.emails}.toList(),
       socialProfiles:
-          {...this.socialProfiles, ...other.socialProfiles}.toList(),
-      dates: {...this.dates, ...other.dates}.toList(),
-      urls: {...this.urls, ...other.urls}.toList(),
-      phones: {...this.phones, ...other.phones}.toList(),
+          {...socialProfiles, ...other.socialProfiles}.toList(),
+      dates: {...dates, ...other.dates}.toList(),
+      urls: {...urls, ...other.urls}.toList(),
+      phones: {...phones, ...other.phones}.toList(),
       postalAddresses:
-          {...this.postalAddresses, ...other.postalAddresses}.toList(),
-      avatar: this.avatar ?? other.avatar);
+          {...postalAddresses, ...other.postalAddresses}.toList(),
+      avatar: avatar ?? other.avatar);
 
   /// Removes duplicates from the collections.  Duplicates are defined as having the exact same value
   Contact removeDuplicates() {
@@ -362,26 +356,26 @@ class Contact {
   @override
   bool operator ==(Object other) {
     return other is Contact &&
-        this.keys == other.keys &&
-        this.identifier == other.identifier &&
-        this.company == other.company &&
-        this.displayName == other.displayName &&
-        this.givenName == other.givenName &&
-        this.familyName == other.familyName &&
-        this.jobTitle == other.jobTitle &&
-        this.middleName == other.middleName &&
-        this.note == other.note &&
-        this.prefix == other.prefix &&
-        this.suffix == other.suffix &&
-        this.lastModified == other.lastModified &&
-        DeepCollectionEquality.unordered().equals(this.phones, other.phones) &&
+        keys == other.keys &&
+        identifier == other.identifier &&
+        company == other.company &&
+        displayName == other.displayName &&
+        givenName == other.givenName &&
+        familyName == other.familyName &&
+        jobTitle == other.jobTitle &&
+        middleName == other.middleName &&
+        note == other.note &&
+        prefix == other.prefix &&
+        suffix == other.suffix &&
+        lastModified == other.lastModified &&
+        DeepCollectionEquality.unordered().equals(phones, other.phones) &&
         DeepCollectionEquality.unordered()
-            .equals(this.socialProfiles, other.socialProfiles) &&
-        DeepCollectionEquality.unordered().equals(this.urls, other.urls) &&
-        DeepCollectionEquality.unordered().equals(this.dates, other.dates) &&
-        DeepCollectionEquality.unordered().equals(this.emails, other.emails) &&
+            .equals(socialProfiles, other.socialProfiles) &&
+        DeepCollectionEquality.unordered().equals(urls, other.urls) &&
+        DeepCollectionEquality.unordered().equals(dates, other.dates) &&
+        DeepCollectionEquality.unordered().equals(emails, other.emails) &&
         DeepCollectionEquality.unordered()
-            .equals(this.postalAddresses, other.postalAddresses);
+            .equals(postalAddresses, other.postalAddresses);
   }
 
   @override
@@ -411,7 +405,7 @@ class ContactDate {
     this.date,
   }) : assert(value != null || date != null);
 
-  static ContactDate? fromMap(final dyn) {
+  static ContactDate? fromMap(final dynamic dyn) {
     if (dyn is Map<dynamic, dynamic>) {
       if (dyn[_kdate] == null && dyn[_kvalue] == null) {
         flutterContactLog.warning(
@@ -469,7 +463,7 @@ class PostalAddress extends Equatable {
 
   String? label, street, city, postcode, region, country;
 
-  static PostalAddress? fromMap(final dyn) {
+  static PostalAddress? fromMap(final dynamic dyn) {
     if (dyn is Map) {
       return PostalAddress(
         label: dyn[_klabel] as String?,
@@ -486,12 +480,12 @@ class PostalAddress extends Equatable {
 
   @override
   List get props => [
-        this.label,
-        this.street,
-        this.city,
-        this.country,
-        this.region,
-        this.postcode,
+        label,
+        street,
+        city,
+        country,
+        region,
+        postcode,
       ];
 }
 
@@ -503,7 +497,7 @@ class Item extends Equatable {
 
   String? label, value;
 
-  static Item? fromMap(final dyn) {
+  static Item? fromMap(final dynamic dyn) {
     if (dyn is Map) {
       return Item(
         value: dyn["value"] as String?,
@@ -524,9 +518,9 @@ class Item extends Equatable {
 class PhoneNumber extends Item {
   final String _unformattedNumber;
 
-  PhoneNumber({String? label, String? number})
+  PhoneNumber({super.label, String? number})
       : _unformattedNumber = _sanitizer(number),
-        super(label: label, value: number);
+        super(value: number);
 
   @override
   String get equalsValue {
@@ -562,7 +556,7 @@ extension ItemListsToMap on Iterable<Item> {
   }
 }
 
-Iterable _iterableKey(map, String key) {
+Iterable _iterableKey(dynamic map, String key) {
   if (map == null) return [];
   return map[key] as Iterable? ?? [];
 }
@@ -651,7 +645,7 @@ bool _isNumeric(String? str) {
   return double.tryParse(str) != null;
 }
 
-DateTime? parseDateTime(final dyn) {
+DateTime? parseDateTime(final dynamic dyn) {
   if (dyn is DateTime) return dyn;
   if (dyn == null) return null;
   return DateTime.tryParse(dyn.toString());
@@ -691,7 +685,7 @@ const _kcountry = "country";
 
 extension FlexiDateToMap on FlexiDate {
   Map<String, int?>? toDateMap() {
-    if (this is FlexiDateData && this.isValid) {
+    if (this is FlexiDateData && isValid) {
       return (this as FlexiDateData).toMap();
     } else {
       return null;

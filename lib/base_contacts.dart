@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +19,7 @@ const _kphotoHighResolution = "photoHighResolution";
 abstract class FormsContract {
   /// Opens a native edit form for the contact with [identifier].  This can be a
   /// simple string, but you can also provide a [ContactKeys] instance
-  Future<Contact?> openContactEditForm(identifier);
+  Future<Contact?> openContactEditForm(dynamic identifier);
 
   /// Opens a native insert form with [data] preloaded
   Future<Contact?> openContactInsertForm(Contact data);
@@ -84,7 +83,7 @@ const kphoneQuery = 'phoneQuery';
 const kids = 'ids';
 
 PageGenerator<Contact> _defaultPageGenerator(
-        ContactService _service,
+        ContactService service,
         String? query,
         bool? phoneQuery,
         bool withThumbnails,
@@ -92,10 +91,10 @@ PageGenerator<Contact> _defaultPageGenerator(
         bool withUnifyInfo,
         ContactSortOrder? sortBy) =>
     (int limit, int offset) async {
-      final List page = await (_service.channel.invokeMethod('getContacts', {
+      final List page = await (service.channel.invokeMethod('getContacts', {
         kquery: query,
         klimit: limit,
-        ksortBy: sortBy?._value ?? _service.defaultSort._value,
+        ksortBy: sortBy?._value ?? service.defaultSort._value,
         koffset: offset,
         kphoneQuery: phoneQuery,
         kwithUnifyInfo: withUnifyInfo,
@@ -106,14 +105,12 @@ PageGenerator<Contact> _defaultPageGenerator(
       return [
         ...page
             .whereType<Object>()
-            .map((_) => Contact.fromMap(_, _service.mode))
+            .map((item) => Contact.fromMap(item, service.mode))
       ];
     };
 
 class ContactFormService extends ContactService implements FormsContract {
-  ContactFormService(
-      MethodChannel channel, EventChannel events, ContactMode mode)
-      : super(channel, events, mode);
+  ContactFormService(super.channel, super.events, super.mode);
 }
 
 class ContactService implements ContactsContract {
@@ -269,10 +266,10 @@ class ContactService implements ContactsContract {
       {bool withThumbnails = true,
       bool withHiResPhoto = true,
       bool withUnifyInfo = true}) async {
-    final _keys = ContactKeys.of(mode, identifier);
+    final keys = ContactKeys.of(mode, identifier);
     final fromChannel =
         await channel.invokeMethod('getContact', <String, dynamic>{
-      _kidentifier: _keys.toMap(),
+      _kidentifier: keys.toMap(),
       _kwithThumbnails: withThumbnails,
       kwithUnifyInfo: withUnifyInfo,
       _kphotoHighResolution: withHiResPhoto,
@@ -329,7 +326,7 @@ class ContactService implements ContactsContract {
             event = ContactsChangedEvent();
             break;
           default:
-            print("Unable to determine type");
+            _log.warning("Unable to determine type");
             event = UnknownContactEvent(dyn);
             break;
         }

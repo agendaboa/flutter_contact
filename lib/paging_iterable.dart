@@ -18,8 +18,8 @@ class PagingList<T> {
       required final FutureOr<int?> length})
       : _length = length {
     if (length is Future<int>) {
-      length.then((_resolved) {
-        _length = _resolved;
+      length.then((resolved) {
+        _length = resolved;
       });
     }
   }
@@ -73,10 +73,10 @@ class PagingList<T> {
     final nextPage = pageGenerator!(bufferSize, (bufferSize * _page++));
     if (nextPage is Future<List<T>>) {
       _pageFuture = nextPage;
-      return nextPage.then((_nextList) {
+      return nextPage.then((nextList) {
         _pageFuture = null;
-        _pageList = _nextList;
-        _currIter = _nextList.iterator;
+        _pageList = nextList;
+        _currIter = nextList.iterator;
         return _currIter!.moveNext() == true;
       });
     } else {
@@ -88,8 +88,8 @@ class PagingList<T> {
   }
 
   FutureOr<bool> moveNext() {
-    final _next = _currIter?.moveNext() == true;
-    if (_next == true) return true;
+    final next = _currIter?.moveNext() == true;
+    if (next == true) return true;
 
     return moveNextPage();
   }
@@ -130,13 +130,13 @@ class PagingStream<T> extends Stream<T> {
   }
 
   FutureOr<bool> moveNext() {
-    final _next = _currPage?.moveNext() == true;
-    if (_next == true) return true;
+    final next = _currPage?.moveNext() == true;
+    if (next == true) return true;
 
     final nextPage = pageGenerator(bufferSize, (bufferSize * _page++));
     if (nextPage is Future<List<T>>) {
-      return nextPage.then((_next) {
-        _currPage = _next.iterator;
+      return nextPage.then((next) {
+        _currPage = next.iterator;
         return _currPage!.moveNext();
       });
     } else {

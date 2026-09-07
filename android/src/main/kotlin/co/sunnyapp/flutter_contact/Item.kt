@@ -1,9 +1,7 @@
 @file:Suppress("MoveVariableDeclarationIntoWhen")
-@file:SuppressLint("DefaultLocale")
 
 package co.sunnyapp.flutter_contact
 
-import android.annotation.SuppressLint
 import android.content.ContentProviderOperation
 import android.database.Cursor
 import android.provider.ContactsContract.CommonDataKinds.*
@@ -24,7 +22,7 @@ sealed class ItemType(val otherType: Int, val labelField: String, val typeField:
         val type = cursor.getInt(cursor.getColumnIndex(typeField))
         val fromTypeInt = if (type == otherType) null else calculateTypeValue(type)
         val fromLabelField = cursor.string(labelField)
-        return fromTypeInt ?: fromLabelField?.toLowerCase() ?: "other"
+        return fromTypeInt ?: fromLabelField?.lowercase() ?: "other"
     }
 
     companion object {
@@ -38,7 +36,7 @@ sealed class ItemType(val otherType: Int, val labelField: String, val typeField:
 
 class EmailType : ItemType(otherType = Email.TYPE_CUSTOM, labelField = Email.LABEL, typeField = Email.TYPE) {
     override fun calculateTypeInt(type: String?): Int {
-        return when (type?.toLowerCase()) {
+        return when (type?.lowercase()) {
             "home" -> Email.TYPE_HOME
             "work" -> Email.TYPE_WORK
             "mobile" -> Email.TYPE_MOBILE
@@ -55,7 +53,7 @@ class EmailType : ItemType(otherType = Email.TYPE_CUSTOM, labelField = Email.LAB
 }
 
 class PhoneType : ItemType(otherType = Phone.TYPE_CUSTOM, labelField = Phone.LABEL, typeField = Phone.TYPE) {
-    override fun calculateTypeInt(type: String?) = when (type?.toLowerCase()) {
+    override fun calculateTypeInt(type: String?) = when (type?.lowercase()) {
         "home" -> Phone.TYPE_HOME
         "work" -> Phone.TYPE_WORK
         "mobile" -> Phone.TYPE_MOBILE
@@ -81,7 +79,7 @@ class PhoneType : ItemType(otherType = Phone.TYPE_CUSTOM, labelField = Phone.LAB
 }
 
 class UrlType : ItemType(otherType = Website.TYPE_CUSTOM, labelField = Website.LABEL, typeField = Website.TYPE) {
-    override fun calculateTypeInt(type: String?) = when (type?.toLowerCase()) {
+    override fun calculateTypeInt(type: String?) = when (type?.lowercase()) {
         "work" -> Website.TYPE_WORK
         "blog" -> Website.TYPE_BLOG
         "home" -> Website.TYPE_HOME
@@ -105,7 +103,7 @@ class UrlType : ItemType(otherType = Website.TYPE_CUSTOM, labelField = Website.L
 }
 
 class EventType : ItemType(otherType = Event.TYPE_CUSTOM, labelField = Event.LABEL, typeField = Event.TYPE) {
-    override fun calculateTypeInt(type: String?) = when (type?.toLowerCase()) {
+    override fun calculateTypeInt(type: String?) = when (type?.lowercase()) {
         "anniversary" -> Event.TYPE_ANNIVERSARY
         "birthday" -> Event.TYPE_ANNIVERSARY
         else -> Event.TYPE_CUSTOM
@@ -119,7 +117,7 @@ class EventType : ItemType(otherType = Event.TYPE_CUSTOM, labelField = Event.LAB
 }
 
 class AddressType : ItemType(otherType = StructuredPostal.TYPE_CUSTOM, labelField = StructuredPostal.LABEL, typeField = StructuredPostal.TYPE) {
-    override fun calculateTypeInt(type: String?) = when (type?.toLowerCase()) {
+    override fun calculateTypeInt(type: String?) = when (type?.lowercase()) {
         "home" -> StructuredPostal.TYPE_HOME
         "work" -> StructuredPostal.TYPE_WORK
         else -> StructuredPostal.TYPE_CUSTOM

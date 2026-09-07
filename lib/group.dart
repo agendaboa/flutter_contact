@@ -15,7 +15,7 @@ class Group extends Equatable {
   final String? identifier, name, description;
   final Set<String> contacts;
 
-  Group.fromMap(dyn)
+  Group.fromMap(dynamic dyn)
       : this(
             identifier: dyn[_kidentifier] as String?,
             name: dyn[_kname] as String?,
